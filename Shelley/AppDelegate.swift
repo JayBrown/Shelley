@@ -8,6 +8,8 @@
 
 import Cocoa
 
+var updaterController: SPUStandardUpdaterController?
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -30,10 +32,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if launchCount() == 1 {
             showWelcomePopover(nil)
         }
-
+        
         Server.shared.start()
-
-        SUUpdater.shared()?.checkForUpdatesInBackground()
+                
+        updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
     }
 
     func registerDefaults() {
@@ -76,8 +78,8 @@ extension AppDelegate {
         NSApp.activate(ignoringOtherApps: true)
     }
 
-    @IBAction func checkForUpdates(_ sender: AnyObject?) {
-        SUUpdater.shared()?.checkForUpdates(nil)
+    @IBAction func checkForUpdates(_ sender: Any?) {
+        updaterController?.checkForUpdates(sender)
     }
 
     @IBAction func quit(_ sender: AnyObject?) {

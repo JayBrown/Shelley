@@ -30,7 +30,7 @@ class Constants {
         if FileManager.default.fileExists(atPath: scriptFolderURL.path) {
             let keyURL = scriptFolderURL.appendingPathComponent("key").appendingPathExtension("txt")
             if FileManager.default.fileExists(atPath: keyURL.path) {
-                return try? String(contentsOf: keyURL)
+                return try? String(contentsOf: keyURL, encoding: .utf8)
             } else {
                 let key = UUID().uuidString
                 do {
