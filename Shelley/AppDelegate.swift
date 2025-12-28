@@ -8,9 +8,10 @@
 
 import Cocoa
 
-var updaterController: SPUStandardUpdaterController?
+@MainActor var updaterController: SPUStandardUpdaterController?
 
-@NSApplicationMain
+@main
+@MainActor
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var statusBarMenu: NSMenu!

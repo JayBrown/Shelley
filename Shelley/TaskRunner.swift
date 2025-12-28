@@ -8,6 +8,13 @@
 
 import Foundation
 
+final class SendableClosure: @unchecked Sendable {
+    let closure: () -> Void
+    init(_ closure: @escaping () -> Void) {
+        self.closure = closure
+    }
+}
+
 class TaskRunner {
 
     var scriptURL: URL
@@ -23,14 +30,20 @@ class TaskRunner {
         }
     }
 
-    func execute(_ completion: (() -> ())? = nil) {
+    func execute(_ completion: (() -> Void)? = nil) {
         let sh = Process()
         sh.launchPath = scriptURL.path
 
-        DispatchQueue.global(qos: .userInitiated).async {
+        let wrappedCompletion = completion.map { SendableClosure($0) }
+
+        DispatchQueue.global(qos: .userInitiated).async { [wrappedCompletion] in
             sh.launch()
             sh.waitUntilExit()
-            completion?()
+            if let wrappedCompletion {
+                DispatchQueue.main.async {
+                    wrappedCompletion.closure()
+                }
+            }
         }
     }
 }

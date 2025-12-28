@@ -10,7 +10,7 @@ import Foundation
 
 class Server {
 
-    static let shared = Server()
+    @MainActor static let shared = Server()
 
     let HTTPServer = CRHTTPServer()
     

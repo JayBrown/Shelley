@@ -8,6 +8,7 @@
 
 import AppKit
 
+@MainActor
 class MenuBarStatusItem {
 
     var statusItem: NSStatusItem?
