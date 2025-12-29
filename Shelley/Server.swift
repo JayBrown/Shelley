@@ -19,7 +19,7 @@ class Server {
     func start() {
         HTTPServer.options(nil) { (request, response, next) in
             response.setAllHTTPHeaderFields(["Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST, OPTIONS"])
-            response.send("")
+            response.send("\n")
         }
 
         HTTPServer.get(nil) { [weak self] (request, response, next) in
@@ -27,12 +27,12 @@ class Server {
 
             let components = request.url.pathComponents
             guard components.count >= 3 else {
-                response.send("Invalid command: " + UUID().uuidString)
+                response.send("Invalid command: " + UUID().uuidString + "\n")
                 return
             }
 
             guard self.keyIsValid(request: request) else {
-                response.send("Invalid key: " + UUID().uuidString)
+                response.send("Invalid key: " + UUID().uuidString + "\n")
                 return
             }
 
@@ -40,21 +40,21 @@ class Server {
             let scriptName = components[2]
             
             if !["run", "wait"].contains(command) {
-                response.send("Invalid command: " + UUID().uuidString)
+                response.send("Invalid command: " + UUID().uuidString + "\n")
                 return
             }
 
             if scriptName.count > 0, let runner = TaskRunner(scriptName: scriptName) {
                 if command == "run" {
                     runner.execute()
-                    response.send("OK: " + UUID().uuidString)
+                    response.send("OK: " + UUID().uuidString + "\n")
                 } else if command == "wait" {
                     runner.execute {
-                        response.send("OK: " + UUID().uuidString)
+                        response.send("OK: " + UUID().uuidString + "\n")
                     }
                 }
             } else {
-                response.send("Script does not exist: " + UUID().uuidString)
+                response.send("Script does not exist: " + UUID().uuidString + "\n")
             }
         }
 
